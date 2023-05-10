@@ -1,0 +1,40 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background-color: #ededed !important;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    color: white;
+    background: black;
+  }
+}
+
+.custom-label{
+  display: block !important;
+  margin: 0 0 0.28571429rem 0 !important;
+  color: rgba(0,0,0,.87) !important;
+  font-size: .92857143em !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+}
+
+.sticky{
+  position: sticky !important;
+}
