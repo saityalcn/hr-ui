@@ -8,37 +8,40 @@ import {
 import MainLayout from '../layouts/layout';
 import { useRouter } from 'next/router';
 import {addWorker} from '../../services/employeeService'
+import {getPositions} from '../../services/positionService'
 
 
-let options = [];
-
-
+let selectedPositionId;
 
 export default () => {
   const [loading, setLoading] = useState(false);
+  const [positions, setPositions] = useState(null);
   const router = useRouter();
-    const sendAddEmployeeRequest = useCallback(async (event) => {
-      setLoading(true)
-      const jsonObject = {
-        name: event.target.firstName.value,
-        surname: event.target.lastName.value,
-        ssn: event.target.ssn.value,
-        address: event.target.address.value,
-        telNo: event.target.telno.value,
-        salary: event.target.salary.value,
-        positionId: 1,
-        recruitmentDate: event.target.recruitmentDate.value,
-        termiantionDate: new Date(),
-      }   
 
-      addWorker(jsonObject).then(res => {
-        router.push('/employee/employees');
-      }).catch(err => {
-        setLoading(false)
-        console.log(err)}
-        )}, []);
+  const sendAddEmployeeRequest = useCallback(async (event) => {
+    setLoading(true)
+    const jsonObject = {
+      name: event.target.firstName.value,
+      surname: event.target.lastName.value,
+      ssn: event.target.ssn.value,
+      address: event.target.address.value,
+      telNo: event.target.telno.value,
+      salary: event.target.salary.value,
+      positionId: selectedPositionId,
+      recruitmentDate: event.target.recruitmentDate.value,
+      termiantionDate: new Date(),
+    }   
+    console.log(jsonObject)
+    addWorker(jsonObject).then(res => {
+      router.push('/employee/employees');
+    }).catch(err => {
+      setLoading(false)
+      console.log(err)}
+  )}, []);
 
-  if(loading)
+  getPositions().then(res => setPositions(res.data)).catch(err => console.log(err));
+      
+  if(loading || positions == null)
         return (<Loader active/>)
     
   return (
@@ -62,7 +65,7 @@ export default () => {
           <Form.Input fluid label='Maaş' placeholder='Çalışan Maaşını Giriniz' name="salary"/>
           <Form.Input fluid label='İşe Başlama Tarihi' type="date" placeholder='' name="recruitmentDate"/>
         </Form.Group>
-        <Form.Select label="Ünvan" placeholder='Şube Seçiniz' options={options} onChange={(e,data) => {secilen_sube_id = data.value;}} ></Form.Select>
+        <Form.Select label="Ünvan" placeholder='Ünvan Seçiniz' options={positions.map(element => {return { key: element.id, value: element.name, text: element.name }})} onChange={(e,data) => {selectedPositionId = (data.options.find(element => (element.value === data.value)).key);console.log(selectedPositionId);}} ></Form.Select>
         <TextArea placeholder='Çalışan Adresi' style={{marginTop: 10 + "px", marginBottom: 10 + "px"}} name="address"/>
         <Form.Button type='submit' primary>Ekle</Form.Button>
       </Form>
