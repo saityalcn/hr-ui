@@ -10,6 +10,25 @@ var selectedEmployee = {};
 
 var employeeIdToDelete;
 
+const formatEmployee = (employee) => {
+  const formatter = new Intl.NumberFormat('tr-TR',{style: 'currency', currency: 'TRY'})
+  const newEmployee = {
+    id: employee.id,
+    name: employee.name,
+    surname: employee.surname,
+    ssn: employee.ssn,
+    address: employee.address,
+    telNo: employee.telNo,
+    salary: formatter.format(employee.salary),
+    position: employee.position,
+    recruitmentDate: new Date(employee.recruitmentDate).toLocaleDateString("tr-TR"),
+    termiantionDate: employee.termiantionDate,
+  }
+
+  return newEmployee;
+}
+
+
 const renderEmployeeDetail = () => {
     return(
       <Tab.Pane>
@@ -30,7 +49,7 @@ const renderEmployeeDetail = () => {
               <Grid.Column>
               <Header as="h3">Maaş </Header>
               </Grid.Column>
-              <Grid.Column>{selectedEmployee.employee_salary}</Grid.Column>
+              <Grid.Column>{selectedEmployee.salary}</Grid.Column>
           </Grid.Row>
           <Grid.Row>
               <Grid.Column>
@@ -58,7 +77,12 @@ const renderEmployeeActions = () => {
         <Form onSubmit={sendSetAwlRequest}>
           <Form.Group widths='equal'>
             <Container>
-              <Container><Form.Input type='date' name="dateawl" label='İzin Bitiş'/></Container>
+              <div style={{paddingTop: 10 + "px", paddingBottom: 10 + "px"}}>
+                <a href="https://logo.cloud/uygulamalar/maas-hesaplama">Maaş Hesapla</a>
+              </div>
+              <Container>
+                <Form.Input type='number' name="salary" label='Maaş'/>
+                </Container>
               <Card><Button type='submit' primary>İzin Ver</Button></Card>
             </Container>
           </Form.Group>
@@ -71,10 +95,13 @@ const renderEmployeeActions = () => {
 const renderEmployees = (employeeData, [open, setOpen]) => {
     const panes = [
       { menuItem: 'Bilgiler', render: () => renderEmployeeDetail()},
-      { menuItem: 'İşlemler', render: () => renderEmployeeActions()},
+      { menuItem: 'Maaş İşlemleri', render: () => renderEmployeeActions()},
+      { menuItem: 'Maaş İşlemleri', render: () => renderEmployeeActions()},
     ]
 
-    return employeeData.map((employee) => {
+    const employeeList = employeeData.map(element => formatEmployee(element));
+
+    return employeeList.map((employee) => {
       return (
         <Table.Row>
             <Table.Cell>{employee.id}</Table.Cell>
@@ -82,8 +109,8 @@ const renderEmployees = (employeeData, [open, setOpen]) => {
             <Table.Cell>{employee.surname}</Table.Cell>
             <Table.Cell>{employee.ssn}</Table.Cell>
             <Table.Cell>{employee.salary}</Table.Cell>
-            <Table.Cell>{employee.positionId}</Table.Cell>
-            <Table.Cell>{new Date(employee.recruitmentDate).toLocaleDateString("tr-TR")}</Table.Cell>
+            <Table.Cell>{employee.position}</Table.Cell>
+            <Table.Cell>{employee.recruitmentDate}</Table.Cell>
             <Table.Cell>
                 <Modal
                 onClose={() => setOpen(false)}
@@ -98,24 +125,16 @@ const renderEmployees = (employeeData, [open, setOpen]) => {
                 </Button>
                 }>
                     <Modal.Header>Çalışan Detay</Modal.Header>
-                    <Modal.Content image>
-                    <Image size='medium' src='https://64.media.tumblr.com/8bdfdc91727c878fda5663518897a26b/8a346e6666396b18-c4/s640x960/6309630712ed212729ee51956c0c24862bfc8847.jpg' wrapped />
-                    <Modal.Description><Tab panes={panes}></Tab></Modal.Description> 
+                    <Modal.Content>
+                      <Modal.Description>
+                        <Tab panes={panes}></Tab>
+                      </Modal.Description> 
                     </Modal.Content>
                     <Modal.Actions>
                         <Button negative onClick={() => setOpen(false)}>Geri Dön</Button>
                     </Modal.Actions>
                 </Modal>
 
-            </Table.Cell>
-            <Table.Cell>
-            <Button inverted color='red' onClick={() => {
-                employeeIdToDelete = employee.employee_id;
-                sendRequest();
-              }}>
-                <Icon name='remove' />
-                    Kaldır
-            </Button>
             </Table.Cell>
         </Table.Row>
       );
@@ -144,7 +163,6 @@ function employeeTable(){
           <Table.HeaderCell>Ünvan</Table.HeaderCell>
           <Table.HeaderCell>İşe Alım Tarihi</Table.HeaderCell>
           <Table.HeaderCell></Table.HeaderCell>
-          <Table.HeaderCell></Table.HeaderCell>
         </Table.Row>
       </Table.Header>
 
@@ -157,7 +175,6 @@ function employeeTable(){
             <Table.HeaderCell />
             <Table.HeaderCell />
             <Table.HeaderCell />
-            <Table.HeaderCell/>
             <Table.HeaderCell/>
             <Table.HeaderCell>
               <Button floated="right" primary size="small" fluid onClick={() => {router.push('/employee/addEmployee');}}>

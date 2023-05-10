@@ -97,7 +97,7 @@ const renderProjects = (projects, [open, setOpen]) => {
     { menuItem: 'Projede Çalışanlar', render: () => renderProjectEmployeeList()},
     { menuItem: 'İşlemler', render: () => renderProjectActions()},
   ]
-  console.log(projects);
+
   return projects.map((project) => {
     return (
       <Table.Row>
