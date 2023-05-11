@@ -8,8 +8,6 @@ import {getAllEmployees} from '../../services/employeeService'
 
 var selectedEmployee = {};
 
-var employeeIdToDelete;
-
 const formatEmployee = (employee) => {
   const formatter = new Intl.NumberFormat('tr-TR',{style: 'currency', currency: 'TRY'})
   const newEmployee = {
@@ -41,62 +39,62 @@ const renderEmployeeDetail = () => {
           </Grid.Row>
           <Grid.Row>
               <Grid.Column>
-              <Header as="h3">Şube</Header>
+              <Header as="h3">Soyad</Header>
               </Grid.Column>
-              <Grid.Column>{selectedEmployee.branch_name}</Grid.Column>
+              <Grid.Column>{selectedEmployee.surname}</Grid.Column>
           </Grid.Row>
           <Grid.Row>
               <Grid.Column>
-              <Header as="h3">Maaş </Header>
+              <Header as="h3">Brüt Maaş</Header>
               </Grid.Column>
               <Grid.Column>{selectedEmployee.salary}</Grid.Column>
           </Grid.Row>
           <Grid.Row>
               <Grid.Column>
-              <Header as="h3">Durumu </Header>
+              <Header as="h3">Ünvan </Header>
               </Grid.Column>
-              <Grid.Column>{selectedEmployee.awl}</Grid.Column>
+              <Grid.Column>{selectedEmployee.position}</Grid.Column>
           </Grid.Row>
           <Grid.Row>
               <Grid.Column>
-              <Header as="h3">İzin Bitiş </Header>
+              <Header as="h3">İşe Alım Tarihi </Header>
               </Grid.Column>
-              <Grid.Column>{selectedEmployee.awl_date}</Grid.Column>
+              <Grid.Column>{selectedEmployee.recruitmentDate}</Grid.Column>
           </Grid.Row>
         </Grid>
       </Tab.Pane>
     );
 }
 
-let sendSetAwlRequest;
-
 const renderEmployeeActions = () => {
   return(
     <Tab.Pane>
         <Container>
-        <Form onSubmit={sendSetAwlRequest}>
-          <Form.Group widths='equal'>
-            <Container>
-              <div style={{paddingTop: 10 + "px", paddingBottom: 10 + "px"}}>
-                <a href="https://logo.cloud/uygulamalar/maas-hesaplama">Maaş Hesapla</a>
-              </div>
-              <Container>
-                <Form.Input type='number' name="salary" label='Maaş'/>
-                </Container>
-              <Card><Button type='submit' primary>İzin Ver</Button></Card>
-            </Container>
-          </Form.Group>
-        </Form>
+          <div style={{paddingTop: 10 + "px", paddingBottom: 10 + "px"}}>Brüt Maaş: {selectedEmployee.salary}</div>
+          <div style={{paddingTop: 10 + "px", paddingBottom: 10 + "px"}}>Çalışılan Gün Sayısı: { getDaysBetweenDates(selectedEmployee.recruitmentDate, new Date())} gün</div>
+          <div style={{paddingTop: 10 + "px", paddingBottom: 10 + "px"}}>
+            <a href="https://logo.cloud/uygulamalar/maas-hesaplama">Maaş Hesapla</a>
+            <a href="https://logo.cloud/uygulamalar/maas-hesaplama" style={{marginLeft: 20 + "px"}}>Tazminat Hesapla</a>
+          </div>
         </Container>
     </Tab.Pane>
   );
 }
 
+function getDaysBetweenDates(startDate, endDate) {
+  const oneDay = 24 * 60 * 60 * 1000;
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  const diffDays = Math.round(Math.abs((start - end) / oneDay));
+
+  return diffDays;
+}
+
 const renderEmployees = (employeeData, [open, setOpen]) => {
     const panes = [
       { menuItem: 'Bilgiler', render: () => renderEmployeeDetail()},
-      { menuItem: 'Maaş İşlemleri', render: () => renderEmployeeActions()},
-      { menuItem: 'Maaş İşlemleri', render: () => renderEmployeeActions()},
+      { menuItem: 'İşlemler', render: () => renderEmployeeActions()},
     ]
 
     const employeeList = employeeData.map(element => formatEmployee(element));

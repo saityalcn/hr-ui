@@ -1,6 +1,6 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
-import { Table, Button, Form, Tab, Icon, Card,Modal, Header, Loader, Grid, Container,Dimmer } from 'semantic-ui-react';
+import { Table, Button, Form, Tab, Icon, Card,Modal, Header, Loader, Grid, Container,Dimmer,Message } from 'semantic-ui-react';
 import { useEffect } from 'react'
 import { useState,useCallback } from 'react';
 import { useRouter } from 'next/router';
@@ -17,6 +17,10 @@ const sendRequest = () => {
   return 1
 }
 
+const dateFormatter = (date) => {
+  return new Date(date).toLocaleDateString("tr-TR")
+}
+
 const renderProjectDetail = () => {
     return(
       <Tab.Pane>
@@ -29,27 +33,36 @@ const renderProjectDetail = () => {
           </Grid.Row>
           <Grid.Row>
               <Grid.Column>
-              <Header as="h3">Şube</Header>
+              <Header as="h3">Planlanan Başlangıç Tarihi</Header>
               </Grid.Column>
-              <Grid.Column>{selectedProject.branch_name}</Grid.Column>
+              <Grid.Column>{dateFormatter(selectedProject.plannedStartDate)}</Grid.Column>
           </Grid.Row>
           <Grid.Row>
               <Grid.Column>
-              <Header as="h3">Maaş </Header>
+              <Header as="h3">Planlanan Teslim Tarihi </Header>
               </Grid.Column>
-              <Grid.Column>{selectedProject.employee_salary}</Grid.Column>
+              <Grid.Column>{dateFormatter(selectedProject.plannedDeliveryDate)}</Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+              <Grid.Column>
+              <Header as="h3">Proje Yöneticisi </Header>
+              </Grid.Column>
+              <Grid.Column>{selectedProject.managerId}</Grid.Column>
           </Grid.Row>
           <Grid.Row>
               <Grid.Column>
               <Header as="h3">Durumu </Header>
               </Grid.Column>
-              <Grid.Column>{selectedProject.awl}</Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-              <Grid.Column>
-              <Header as="h3">İzin Bitiş </Header>
-              </Grid.Column>
-              <Grid.Column>{selectedProject.awl_date}</Grid.Column>
+              <Grid.Column>{!selectedProject.valid && (
+              <Message
+                content="Yetersiz Çalışan"
+                error
+              />)}{
+                (selectedProject.valid && (<Message
+                  content="Uygun"
+                  success
+                />))
+              }</Grid.Column>
           </Grid.Row>
         </Grid>
       </Tab.Pane>
@@ -103,10 +116,21 @@ const renderProjects = (projects, [open, setOpen]) => {
       <Table.Row>
           <Table.Cell>{project.id}</Table.Cell>
           <Table.Cell>{project.name}</Table.Cell>
-          <Table.Cell>{project.employee_name}</Table.Cell>
-          <Table.Cell>{project.employee_salary}</Table.Cell>
-          <Table.Cell>{project.awl_date}</Table.Cell>
-          <Table.Cell></Table.Cell>
+          <Table.Cell>{dateFormatter(project.plannedStartDate)}</Table.Cell>
+          <Table.Cell>{dateFormatter(project.plannedDeliveryDate)}</Table.Cell>
+          <Table.Cell>{!project.valid && (
+              <Message
+                compact
+                content="Yetersiz Çalışan"
+                error
+              />)}{
+                (project.valid && (<Message
+                  compact
+                  content="Uygun"
+                  success
+                />))}
+          </Table.Cell>
+          <Table.Cell>{project.managerId}</Table.Cell>
           <Table.Cell>
               <Modal
               onClose={() => setOpen(false)}
@@ -120,7 +144,7 @@ const renderProjects = (projects, [open, setOpen]) => {
                   </Button.Content>
               </Button>
               }>
-                  <Modal.Header>Çalışan Detay</Modal.Header>
+                  <Modal.Header>Proje Detay</Modal.Header>
                   <Modal.Content>
                   <Modal.Description><Tab panes={panes}></Tab></Modal.Description> 
                   </Modal.Content>
