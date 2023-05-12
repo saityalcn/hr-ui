@@ -11,6 +11,7 @@ import {addProject} from '../../services/projectService'
 import { useRouter } from 'next/router';
 import { getPositions } from '../../services/positionService';
 import { getAllEmployees } from '../../services/employeeService';
+import { addProjectPosition } from '../../services/projectPositionService';
 
 
 let options = [
@@ -52,26 +53,19 @@ const addProjectForm = () => {
     const name = event.target.name.value;
     const plannedStartDate = event.target.plannedStartDate.value;
     const plannedDeliveryDate = event.target.plannedDeliveryDate.value;
-    /*
-    const minNumberOfAnalysts = event.target.minNumberOfAnalysts.value;
-    const maxNumberOfAnalysts = event.target.maxNumberOfAnalysts.value;
-    const minNumberOfDesigners = event.target.minNumberOfDesigners.value;
-    const maxNumberOfDesigners = event.target.maxNumberOfDesigners.value;
-    const minNumberOfDevelopers = event.target.minNumberOfDevelopers.value;
-    const maxNumberOfDevelopers = event.target.maxNumberOfDevelopers.value;
-    const jsonObject = JSON.stringify({
-      name: name,
-      selectedManagerId: selectedManagerId,
-      plannedStartDate: plannedStartDate,
-      plannedDeliveryDate: plannedDeliveryDate,
-      minNumberOfAnalysts: minNumberOfAnalysts,
-      maxNumberOfAnalysts: maxNumberOfAnalysts,
-      minNumberOfDesigners: minNumberOfDesigners,
-      maxNumberOfDesigners: maxNumberOfDesigners,
-      minNumberOfDevelopers: minNumberOfDevelopers,
-      maxNumberOfDevelopers: maxNumberOfDevelopers,
-    });
-    */
+
+    const minMaxValues = [];
+
+    if(positions){
+      const target = event.target
+      positions.forEach(element => {
+        minMaxValues.push({
+          key: element.id,
+          max: target["maxNumberOf" + element.id].value,
+          min: target["minNumberOf" + element.id].value
+        })
+      });
+    }
 
     const jsonObject = JSON.stringify({
       name: name,
@@ -83,7 +77,15 @@ const addProjectForm = () => {
     });
 
     addProject(jsonObject).then(res => {
-      router.push('/project/projects')
+      minMaxValues.forEach(element => {
+        const map = {
+          projectId: res.data.id,
+          positionId: element.key,
+          minWorker: element.min,
+          maxWorker: element.max,
+        }
+        addProjectPosition(map).then(response => router.push('/project/projects')).catch(err => console.log(err))
+      })
     }).catch(err => console.log(err));
   });
 
