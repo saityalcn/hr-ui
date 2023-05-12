@@ -13,3 +13,9 @@ export function addWorker(jsonObject){
     const url = API_URL + "/addWorker";
     return axios.post(url, jsonObject, {headers: HEADER});
 }
+
+
+export function getWorkersByProjectId(projectId){
+  const url = API_URL + "/getAllWorkerFromProject?projectId="+projectId;
+  return axios.post(url, {}, {headers: HEADER})
+}

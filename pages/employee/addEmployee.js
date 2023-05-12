@@ -65,7 +65,7 @@ export default () => {
           <Form.Input fluid label='Maaş' placeholder='Çalışan Maaşını Giriniz' name="salary"/>
           <Form.Input fluid label='İşe Başlama Tarihi' type="date" placeholder='' name="recruitmentDate"/>
         </Form.Group>
-        <Form.Select label="Ünvan" placeholder='Ünvan Seçiniz' options={positions.map(element => {return { key: element.id, value: element.name, text: element.name }})} onChange={(e,data) => {selectedPositionId = (data.options.find(element => (element.value === data.value)).key);console.log(selectedPositionId);}} ></Form.Select>
+        <Form.Select label="Ünvan" placeholder='Ünvan Seçiniz' options={positions.map(element => {return { key: element.id, value: element.name, text: element.name }})} onChange={(e,data) => {selectedPositionId = (data.options.find(element => (element.value === data.value)).key);}} ></Form.Select>
         <TextArea placeholder='Çalışan Adresi' style={{marginTop: 10 + "px", marginBottom: 10 + "px"}} name="address"/>
         <Form.Button type='submit' primary>Ekle</Form.Button>
       </Form>

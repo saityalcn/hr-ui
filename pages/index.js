@@ -15,38 +15,45 @@ import {
   PopupContent,
   Message,
 } from 'semantic-ui-react';
-const description = 'Lütfen Sistem Yöneticinizle İletişime Geçiniz..';
-const myfunction = () => {
-  console.log('asjkdna');
-};
 
-let jsonResponse;
+import {logIn} from "../services/accountService"
+
+const description = 'Lütfen Sistem Yöneticinizle İletişime Geçiniz.';
+
 let wrongInfoError = false;
-let myHeaders = new Headers({
-  'Content-Type': 'application/json',
-});
+
 
 function Home() {
 const [isSending, setIsSending] = useState(false);
 const router = useRouter();
 const sendRequest = useCallback(async (event) => {
   if (isSending) return
+
   setIsSending(true);
   const email = event.target.email.value;
   const password = event.target.password.value;
-  const jsonObject = JSON.stringify({email: email, password: password});
-  const response = await fetch('http://localhost:10500/account/log-in', {method: "POST", headers: myHeaders, body:jsonObject});
-  jsonResponse = await response.json();
-  console.log(jsonResponse);
-  if(jsonResponse.isAuthenticated === true){
-    jsCookie.set('token', jsonResponse.userId);
+  const jsonObject = {username: email, password: password};
+
+
+  const response = await logIn(jsonObject).catch(err => {
+    wrongInfoError = true;
+  })
+
+
+  if(response && response.data.email){
+    jsCookie.set('email', response.data.email);
+    jsCookie.set('name', response.data.name);
+    jsCookie.set('surname', response.data.surname);
+
+
     return router.push('/home/home');
   }
+
   else
     wrongInfoError = true;
   
   setIsSending(false)
-}, [isSending]);
+}, []);
 
   return (
     <div>
@@ -92,11 +99,6 @@ const sendRequest = useCallback(async (event) => {
             <Card centered>
               <Card.Content header="Kayıt İçin" />
               <Card.Content description={description} />
-              <Card.Content extra>
-                <Icon name="mail" link onClick={myfunction} />
-                {/* maili mavi yap */}
-                admin@lorem.com
-              </Card.Content>
             </Card>
           </Grid.Column>
         </Grid>

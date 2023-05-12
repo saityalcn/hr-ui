@@ -13,3 +13,9 @@ export function addProject(jsonObject){
     const url = API_URL + "/addProject"
     return axios.post(url, jsonObject,{headers: HEADER})
 }
+
+export function finishProjectByProjectId(projectId){
+    const url = API_URL + "/finishProject?projectId="+projectId;
+    return axios.post(url, {}, {headers: HEADER})
+}
+
