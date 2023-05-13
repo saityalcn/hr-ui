@@ -30,7 +30,7 @@ const formatEmployee = (employee) => {
 const renderEmployeeDetail = () => {
     return(
       <Tab.Pane>
-        <Grid reversed="tablet" columns="equal">
+        <Grid columns="equal">
           <Grid.Row>
               <Grid.Column>
               <Header as="h3">İsim</Header>
@@ -73,8 +73,8 @@ const renderEmployeeActions = () => {
           <div style={{paddingTop: 10 + "px", paddingBottom: 10 + "px"}}>Brüt Maaş: {selectedEmployee.salary}</div>
           <div style={{paddingTop: 10 + "px", paddingBottom: 10 + "px"}}>Çalışılan Gün Sayısı: { getDaysBetweenDates(selectedEmployee.recruitmentDate, new Date())} gün</div>
           <div style={{paddingTop: 10 + "px", paddingBottom: 10 + "px"}}>
-            <a href="https://logo.cloud/uygulamalar/maas-hesaplama">Maaş Hesapla</a>
-            <a href="https://logo.cloud/uygulamalar/maas-hesaplama" style={{marginLeft: 20 + "px"}}>Tazminat Hesapla</a>
+            <a href="https://logo.cloud/uygulamalar/maas-hesaplama" target='_blank'>Maaş Hesapla</a>
+            <a href="https://logo.cloud/uygulamalar/maas-hesaplama" target='_blank' style={{marginLeft: 20 + "px"}}>Tazminat Hesapla</a>
           </div>
         </Container>
     </Tab.Pane>
@@ -144,7 +144,8 @@ function employeeTable(){
   const [data, setData] = useState(null);
   const [open, setOpen] = React.useState(false);
 
-  getAllEmployees().then(res => setData(res.data)).catch(err => console.log(err))
+  if(!data)
+    getAllEmployees().then(res => setData(res.data)).catch(err => console.log(err))
 
   if(data == null)
     return (<Loader active/>)

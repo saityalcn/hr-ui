@@ -10,18 +10,11 @@ import Layout from '../layouts/layout';
 import {addProject} from '../../services/projectService'
 import { useRouter } from 'next/router';
 import { getPositions } from '../../services/positionService';
-import { getAllEmployees } from '../../services/employeeService';
+import { getFreeWorkers } from '../../services/employeeService';
 import { addProjectPosition } from '../../services/projectPositionService';
 
-
-let options = [
-  { key: 'm', text: 'Male', value: 'male' },
-  { key: 'f', text: 'Female', value: 'female' },
-  { key: 'o', text: 'Other', value: 'other' },
-];
-
 let selectedManagerId
-
+let request = false;
 
 const generateBoundInputs = (data) => {
   if(data != undefined)
@@ -43,13 +36,13 @@ const addProjectForm = () => {
   if(!positions)
     getPositions().then(res => {setPositions(res.data)}).catch(err => console.log(err));
 
-  getAllEmployees().then(res => {
-    setWorkers(res.data)
-  }).catch(err => console.log(err));
+  if(!workers)
+    getFreeWorkers().then(res => {
+      setWorkers(res.data)
+    }).catch(err => console.log(err));
 
   const createProject = useCallback(async (event) => {
     setLoading(true)
-    
     const name = event.target.name.value;
     const plannedStartDate = event.target.plannedStartDate.value;
     const plannedDeliveryDate = event.target.plannedDeliveryDate.value;
@@ -75,18 +68,24 @@ const addProjectForm = () => {
       valid: true,
       active: true,
     });
-
-    addProject(jsonObject).then(res => {
-      minMaxValues.forEach(element => {
-        const map = {
-          projectId: res.data.id,
-          positionId: element.key,
-          minWorker: element.min,
-          maxWorker: element.max,
-        }
-        addProjectPosition(map).then(response => router.push('/project/projects')).catch(err => console.log(err))
-      })
-    }).catch(err => console.log(err));
+    if(!request){
+      request = true
+      addProject(jsonObject).then(res => {
+        
+        minMaxValues.forEach(element => {
+          const map = {
+            projectId: res.data.id,
+            positionId: element.key,
+            minWorker: element.min,
+            maxWorker: element.max,
+          }
+          addProjectPosition(map).then(response => {
+            request = false; 
+            router.push('/project/projects')
+          }).catch(err => console.log(err))
+        })
+      }).catch(err => console.log(err));
+   }
   });
 
   if(!workers){

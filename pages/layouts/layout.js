@@ -37,6 +37,7 @@ export default (props) => {
           >
             <div style={{display: "flex", justifyContent: "space-between", flexDirection: "column", height: 100 + "%"}}>
               <div>
+                <Header>YSOFT Yazılım Evi İnsan Kaynakları Sistemi</Header>
               <Menu.Item
                 as="a"
                 style={{ color: iconColor }}
