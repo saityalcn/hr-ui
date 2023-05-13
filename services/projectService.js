@@ -19,3 +19,14 @@ export function finishProjectByProjectId(projectId){
     return axios.post(url, {}, {headers: HEADER})
 }
 
+export function getProjectsWithManagers(){
+    const url = API_URL + "/getAllManager"
+    return axios.post(url, {}, {headers: HEADER})
+}
+
+export function getExpiredProjects(){
+    const url = API_URL + "/getExpiredProjects"
+    return axios.post(url, {}, {headers: HEADER})
+}
+
+

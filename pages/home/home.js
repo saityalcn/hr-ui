@@ -18,12 +18,8 @@ export default () => {
         href="semantic/dist/semantic.min.css"
       ></link>
       <MainLayout>
-        <Header as="h2">Çalışan Atanması Gereken Projeler</Header>
+        <Header as="h2">Teslim Tarihi Geçen Projeler</Header>
         <ProjectsTable></ProjectsTable>
-
-
-        <Header as="h2">Yeni Eklenen Çalışanlar</Header>
-        <EmployeeTable></EmployeeTable>
 
       </MainLayout>
     </div>

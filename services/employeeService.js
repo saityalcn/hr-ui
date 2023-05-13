@@ -19,3 +19,14 @@ export function getWorkersByProjectId(projectId){
   const url = API_URL + "/getAllWorkerFromProject?projectId="+projectId;
   return axios.post(url, {}, {headers: HEADER})
 }
+
+export function assignWorkerToPosition(workerId){
+  const url = API_URL + "/findFreePosition?workerId="+workerId;
+  return axios.post(url, {}, {headers: HEADER});
+}
+
+
+export function getFreeWorkers(){
+  const url = API_URL + "/getFreeWorkers";
+  return axios.get(url);
+}
