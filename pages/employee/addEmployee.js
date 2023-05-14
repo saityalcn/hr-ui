@@ -32,6 +32,7 @@ export default () => {
       salary: event.target.salary.value,
       positionId: selectedPositionId,
       recruitmentDate: event.target.recruitmentDate.value,
+      accountingUrl: event.target.accountingUrl,
       termiantionDate: new Date(),
     }   
     console.log(jsonObject)
@@ -83,6 +84,9 @@ export default () => {
         <Form.Group widths='equal'>
           <Form.Input fluid label='Maaş' type="number" placeholder='Çalışan Maaşını Giriniz' name="salary"/>
           <Form.Input fluid label='İşe Başlama Tarihi' type="date" placeholder='' name="recruitmentDate"/>
+        </Form.Group>
+        <Form.Group widths='equal'>
+          <Form.Input fluid label='Maaş Hesaplama Uygulaması Linki' type="number" placeholder='Çalışan Maaşını hesaplamak için kullanmak istediğiniz uygulamanızın linkini giriniz.' name="accountingUrl"/>
         </Form.Group>
         <Form.Select label="Ünvan" placeholder='Ünvan Seçiniz' options={positions.map(element => {return { key: element.id, value: element.name, text: element.name }})} onChange={(e,data) => {selectedPositionId = (data.options.find(element => (element.value === data.value)).key);}} ></Form.Select>
         <TextArea placeholder='Çalışan Adresi' style={{marginTop: 10 + "px", marginBottom: 10 + "px"}} name="address"/>
