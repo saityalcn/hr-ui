@@ -28,6 +28,7 @@ const formatEmployee = (employee) => {
 
 
 const renderEmployeeDetail = () => {
+  const formattedEmployee = formatEmployee(selectedEmployee)
     return(
       <Tab.Pane>
         <Grid columns="equal">
@@ -35,31 +36,31 @@ const renderEmployeeDetail = () => {
               <Grid.Column>
               <Header as="h3">İsim</Header>
               </Grid.Column>
-              <Grid.Column>{selectedEmployee.name}</Grid.Column>
+              <Grid.Column>{formattedEmployee.name}</Grid.Column>
           </Grid.Row>
           <Grid.Row>
               <Grid.Column>
               <Header as="h3">Soyad</Header>
               </Grid.Column>
-              <Grid.Column>{selectedEmployee.surname}</Grid.Column>
+              <Grid.Column>{formattedEmployee.surname}</Grid.Column>
           </Grid.Row>
           <Grid.Row>
               <Grid.Column>
               <Header as="h3">Brüt Maaş</Header>
               </Grid.Column>
-              <Grid.Column>{selectedEmployee.salary}</Grid.Column>
+              <Grid.Column>{formattedEmployee.salary}</Grid.Column>
           </Grid.Row>
           <Grid.Row>
               <Grid.Column>
               <Header as="h3">Ünvan </Header>
               </Grid.Column>
-              <Grid.Column>{selectedEmployee.position}</Grid.Column>
+              <Grid.Column>{formattedEmployee.position}</Grid.Column>
           </Grid.Row>
           <Grid.Row>
               <Grid.Column>
               <Header as="h3">İşe Alım Tarihi </Header>
               </Grid.Column>
-              <Grid.Column>{selectedEmployee.recruitmentDate}</Grid.Column>
+              <Grid.Column>{formattedEmployee.recruitmentDate}</Grid.Column>
           </Grid.Row>
         </Grid>
       </Tab.Pane>
@@ -67,10 +68,11 @@ const renderEmployeeDetail = () => {
 }
 
 const renderEmployeeActions = () => {
+  const formattedEmployee = formatEmployee(selectedEmployee)
   return(
     <Tab.Pane>
         <Container>
-          <div style={{paddingTop: 10 + "px", paddingBottom: 10 + "px"}}>Brüt Maaş: {selectedEmployee.salary}</div>
+          <div style={{paddingTop: 10 + "px", paddingBottom: 10 + "px"}}>Brüt Maaş: {formattedEmployee.salary}</div>
           <div style={{paddingTop: 10 + "px", paddingBottom: 10 + "px"}}>Çalışılan Gün Sayısı: { getDaysBetweenDates(selectedEmployee.recruitmentDate, new Date())} gün</div>
           <div style={{paddingTop: 10 + "px", paddingBottom: 10 + "px"}}>
             <a href="https://logo.cloud/uygulamalar/maas-hesaplama" target='_blank'>Maaş Hesapla</a>
@@ -83,11 +85,16 @@ const renderEmployeeActions = () => {
 
 function getDaysBetweenDates(startDate, endDate) {
   const oneDay = 24 * 60 * 60 * 1000;
+  console.log(startDate);
   const start = new Date(startDate);
   const end = new Date(endDate);
 
+  console.log(start)
+  console.log(end)
+
   const diffDays = Math.round(Math.abs((start - end) / oneDay));
 
+  console.log(diffDays)
   return diffDays;
 }
 
@@ -97,18 +104,17 @@ const renderEmployees = (employeeData, [open, setOpen]) => {
       { menuItem: 'İşlemler', render: () => renderEmployeeActions()},
     ]
 
-    const employeeList = employeeData.map(element => formatEmployee(element));
-
-    return employeeList.map((employee) => {
+    return employeeData.map((employee) => {
+      const formattedEmployee = formatEmployee(employee)
       return (
         <Table.Row>
-            <Table.Cell>{employee.id}</Table.Cell>
-            <Table.Cell>{employee.name}</Table.Cell>
-            <Table.Cell>{employee.surname}</Table.Cell>
-            <Table.Cell>{employee.ssn}</Table.Cell>
-            <Table.Cell>{employee.salary}</Table.Cell>
-            <Table.Cell>{employee.position}</Table.Cell>
-            <Table.Cell>{employee.recruitmentDate}</Table.Cell>
+            <Table.Cell>{formattedEmployee.id}</Table.Cell>
+            <Table.Cell>{formattedEmployee.name}</Table.Cell>
+            <Table.Cell>{formattedEmployee.surname}</Table.Cell>
+            <Table.Cell>{formattedEmployee.ssn}</Table.Cell>
+            <Table.Cell>{formattedEmployee.salary}</Table.Cell>
+            <Table.Cell>{formattedEmployee.position}</Table.Cell>
+            <Table.Cell>{formattedEmployee.recruitmentDate}</Table.Cell>
             <Table.Cell>
                 <Modal
                 onClose={() => setOpen(false)}
