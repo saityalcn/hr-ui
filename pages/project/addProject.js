@@ -65,7 +65,7 @@ const addProjectForm = () => {
       managerId: selectedManagerId,
       plannedStartDate: plannedStartDate,
       plannedDeliveryDate: plannedDeliveryDate,
-      valid: true,
+      valid: false,
       active: true,
     });
     if(!request){
