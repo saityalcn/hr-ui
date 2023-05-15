@@ -75,8 +75,8 @@ const renderEmployeeActions = () => {
           <div style={{paddingTop: 10 + "px", paddingBottom: 10 + "px"}}>Brüt Maaş: {formattedEmployee.salary}</div>
           <div style={{paddingTop: 10 + "px", paddingBottom: 10 + "px"}}>Çalışılan Gün Sayısı: { getDaysBetweenDates(selectedEmployee.recruitmentDate, new Date())} gün</div>
           <div style={{paddingTop: 10 + "px", paddingBottom: 10 + "px"}}>
-            <a href="https://logo.cloud/uygulamalar/maas-hesaplama" target='_blank'>Maaş Hesapla</a>
-            <a href="https://logo.cloud/uygulamalar/maas-hesaplama" target='_blank' style={{marginLeft: 20 + "px"}}>Tazminat Hesapla</a>
+            <a href={selectedEmployee.accountingUrl +"/"} target='_blank'>Maaş Hesapla</a>
+            <a href="https://turmob.org.tr/hesaplamalar/kidemihbarvetazminati" target='_blank' style={{marginLeft: 20 + "px"}}>Tazminat Hesapla</a>
           </div>
         </Container>
     </Tab.Pane>
